@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Научи ијекавицу - српски - 2. разред</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif}
+body{background:#FFF8E1;display:flex;justify-content:center;padding:8px;min-height:100dvh}
+#app{width:100%;max-width:480px;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.15)}
+header{background:#C62828;color:#fff;padding:16px;text-align:center}
+header h1{font-size:23px} header p{font-size:13px;opacity:.9;margin-top:4px}
+#stats{display:flex;justify-content:space-around;font-weight:800;padding:10px}
+#napredak{height:9px;background:#eee;border-radius:10px;overflow:hidden;margin:0 12px 8px}
+#napredak div{height:100%;background:#C62828;width:0%;transition:.4s}
+#menu{display:flex;gap:8px;padding:0 12px 10px}
+#menu button{flex:1;padding:13px;border-radius:14px;border:0;font-weight:900;cursor:pointer;background:#eee;font-size:14px}
+#menu button.active{background:#C62828;color:#fff}
+#menu button.test{background:#1565C0;color:#fff}
+#katList{display:flex;gap:8px;padding:0 12px 10px}
+#katList button{flex:1;padding:11px;border-radius:20px;border:2px solid #eee;background:#fff;font-weight:800;cursor:pointer;font-size:14px}
+#katList button.active{background:#FFEBEE;border-color:#C62828;color:#C62828}
+#katList button.active2{background:#E3F2FD;border-color:#1565C0;color:#1565C0}
+#lista{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 12px 12px}
+.kartica{border:2px solid #eee;border-radius:16px;padding:12px;text-align:center;cursor:pointer;background:#FAFAFA}
+.kartica b{font-size:18px;display:block}
+.kartica span{font-size:24px}
+.kartica.naucena{border-color:#2E7D32;background:#E8F5E9}
+#ucenje,#test{padding:14px;display:none}
+#back{border:0;background:#eee;padding:10px 14px;border-radius:12px;font-weight:800;cursor:pointer;margin-bottom:10px}
+#velika{font-size:54px;font-weight:900;text-align:center;min-height:72px}
+#velika span{color:#ddd}
+#velika span.gotovo{color:#2E7D32}
+#velika span.trenutno{color:#FF6F00;border-bottom:4px solid #FF6F00}
+#slogovi{text-align:center;margin:8px 0}
+#slogovi b{background:#E3F2FD;padding:6px 10px;border-radius:10px;margin:0 3px;display:inline-block;font-size:18px}
+#slogovi b.akcenat{background:#FFEBEE;color:#C62828;border:2px solid #C62828}
+#praviloBox{background:#FFF3E0;border-radius:14px;padding:14px;line-height:1.65;font-size:15px}
+#praviloBox b{color:#C62828}
+#primjer{background:#F1F8E9;border-radius:12px;padding:12px;margin-top:10px;font-style:italic;font-size:16px}
+#korak{font-weight:900;color:#2E7D32;text-align:center;margin:10px 0;font-size:15px}
+#poljePisanje input{width:100%;padding:16px;font-size:30px;font-weight:900;text-align:center;border:3px solid #C62828;border-radius:16px;outline:none}
+#tast{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0}
+#tast button{height:48px;border-radius:10px;border:0;background:#F1F8E9;font-weight:800;font-size:19px;cursor:pointer}
+#tast button.hint{background:#FFD54F;font-weight:900}
+#provjeriBtn{width:100%;padding:15px;border:0;border-radius:14px;background:#C62828;color:#fff;font-weight:900;font-size:18px;cursor:pointer}
+#msg{text-align:center;font-weight:800;min-height:32px;margin:8px 0;font-size:16px;line-height:1.4}
+#trik{background:#E8F5E9;border-radius:12px;padding:12px;margin-top:10px;font-size:14px;display:none}
+#testPitanje{font-size:42px;font-weight:900;text-align:center;margin:16px 0;min-height:60px}
+#testPitanje span.blank{color:#C62828;border-bottom:4px dashed #C62828;padding:0 10px}
+#testOpcije{display:grid;gap:12px}
+#testOpcije button{padding:20px;border-radius:16px;border:3px solid #E0E0E0;background:#F9FBE7;font-size:28px;font-weight:900;cursor:pointer}
+#testOpcije button.tacno{background:#C8E6C9!important;border-color:#2E7D32}
+#testOpcije button.netacno{background:#FFCDD2!important;border-color:#C62828}
+#testMsg{text-align:center;font-weight:800;min-height:36px;margin:10px 0;font-size:16px}
+#testBar{height:9px;background:#eee;border-radius:10px;overflow:hidden;margin:10px 0}
+#testBar div{height:100%;background:#1565C0;width:0%;transition:.4s}
+</style>
+</head>
+<body>
+<div id="app">
+<header><h1>✏️ Научи ИЈЕКАВИЦУ</h1><p>2. разред • САМО СРПСКИ • само ИЈЕ / ЈЕ • ћирилица</p></header>
+<div id="stats"><span>⭐ <b id="bod">0</b></span><span>📚 <b id="nauceno">0</b></span><span>🎯 <b id="procenat">0%</b></span></div>
+<div id="napredak"><div id="bar"></div></div>
+<div id="glavna">
+<div id="menu"><button id="btnUci" class="active">📖 УЧИ</button><button id="btnTest" class="test">🏆 ТЕСТ</button></div>
+<div id="katList"></div>
+<div id="lista"></div>
+</div>
+<div id="ucenje">
+<button id="back">⬅️ Назад</button>
+<div id="emojiVelika" style="font-size:64px;text-align:center"></div>
+<div id="velika"></div>
+<div id="slogovi"></div>
+<div id="korak">КОРАК 1: Гледај како се пише 👀</div>
+<div id="praviloBox"></div>
+<div id="primjer"></div>
+<div id="trik"></div>
+<div id="poljePisanje" style="display:none;margin-top:12px">
+<div style="font-weight:900;color:#1565C0;margin-bottom:8px;text-align:center">КОРАК 2: Сад ти напиши ✏️</div>
+<input id="upis" placeholder="..." autocomplete="off">
+<div id="tast"></div>
+<button id="provjeriBtn">ПРОВЈЕРИ ✅</button>
+<div id="msg"></div>
+<button id="daljeBtn" style="display:none;width:100%;padding:14px;border:0;border-radius:14px;background:#FF6F00;color:#fff;font-weight:900;font-size:17px;cursor:pointer">НАУЧИО САМ ✅ СЉЕДЕЋА ➡️</button>
+</div>
+</div>
+<div id="test">
+<button id="backTest">⬅️ Назад</button>
+<div style="text-align:center;font-weight:900;margin:8px 0">🏆 ТЕСТ - Питање <span id="testBroj">1</span>/10</div>
+<div id="testBar"><div id="testBarFill"></div></div>
+<div id="emojiTest" style="font-size:56px;text-align:center"></div>
+<div id="testPitanje"></div>
+<div style="text-align:center;color:#666;font-size:14px">Шта недостаје? ИЈЕ или ЈЕ?</div>
+<div id="testOpcije"></div>
+<div id="testMsg"></div>
+<button id="testDalje" style="display:none;width:100%;padding:14px;border:0;border-radius:14px;background:#1565C0;color:#fff;font-weight:900;font-size:17px;cursor:pointer">СЉЕДЕЋЕ ПИТАЊЕ ➡️</button>
+<div id="diploma" style="display:none;text-align:center;padding:10px"><div style="font-size:70px">🏆</div><h2 style="font-size:26px;margin:10px 0">ДИПЛОМА!</h2><p id="diplomaTekst" style="font-size:18px;line-height:1.6"></p><button id="testPonovo" style="width:100%;padding:14px;border:0;border-radius:14px;background:#C62828;color:#fff;font-weight:900;margin-top:12px">ИГРАЈ ОПЕТ 🔄</button><button id="nazadUci" style="width:100%;padding:14px;border:0;border-radius:14px;background:#eee;font-weight:900;margin-top:8px">НАЗАД НА УЧЕЊЕ 📖</button></div>
+</div>
+</div>
+<script>
+const DUGO=[
+["дијете","👶","Дијете се игра."],
+["вријеме","⏰","Какво је вријеме?"],
+["свијет","🌍","Цијели свијет."],
+["лијеп","🌸","Баш си лијеп."],
+["лијепа","🌷","Баш си лијепа."],
+["бијели","🤍","Бијели снијег."],
+["бијела","🤍","Бијела кућа."],
+["млијеко","🥛","Пијем млијеко."],
+["снијег","❄️","Пада снијег."],
+["цвијеће","🌷","Мирише цвијеће."],
+["ријека","🏞️","Ријека тече."],
+["прије","🕐","Био сам прије тебе."],
+["лијек","💊","Попиј лијек."],
+["лијево","⬅️","Иди лијево."],
+["дијелити","🍰","Хајде да дијелимо."],
+["цијели","🌍","Цијели дан."],
+["смијех","😂","Чује се смијех."],
+["пијесак","🏖️","Играм се у пијеску."],
+["ријеч","💬","Кажи једну ријеч."],
+["лијепити","✂️","Хајде да лијепимо."],
+["тијело","🧍","Моје тијело је здраво."],
+];
+const KRATKO=[
+["дјечак","👦","Дјечак игра фудбал."],
+["дјевојчица","👧","Дјевојчица црта."],
+["дјевојка","💁‍♀️","Она је лијепа дјевојка."],
+["дјеца","👧👦","Дјеца се играју."],
+["мјесто","📍","Ово је моје мјесто."],
+["човјек","🧍","Тај човјек је мој тата."],
+["пјесма","🎵","Пјевам пјесму."],
+["мјесец","🌙","Сија мјесец."],
+["вјежба","🏋️","Радим вјежбу."],
+["вјеровати","🙏","Вјерујем ти."],
+["сједити","🪑","Сједим на столици."],
+["пјевати","🎤","Волим да пјевам."],
+["вјетар","💨","Дува вјетар."],
+["пјешак","🚶","Ја сам пјешак."],
+["сјенка","🌳","Сакриј се у сјенку."],
+["пјега","😊","Имам пјегу на носу."],
+["недјеља","📅","Има 7 дана, један је недјеља."],
+["сјести","🪑","Хајде да сједнемо."],
+["пјена","🫧","Видим пјену."],
+];
+function napravi(list, tip){
+  return list.map(([r,e,prim])=>({r,e,prim,tip,
+    prav: tip==='ije' ? `Пише се <b>${r.toUpperCase()}</b>.<br>Кажи полако: <b>${r}</b> - чујеш да је <b>ДУГО</b>? Кад је дуго, пишемо <b>ИЈЕ</b>.` : `Пише се <b>${r.toUpperCase()}</b>.<br>Кажи брзо: <b>${r}</b> - <b>КРАТКО</b> је! Кад је кратко, пишемо само <b>ЈЕ</b>.`,
+    trik: tip==='ije' ? "ТРИК: Ако можеш да отегнеш - онда је ИЈЕ!" : "ТРИК: Пробај да отегнеш - не иде! Значи само ЈЕ."}));
+}
+const PODACI=[
+{kat:"🟢 ДУГО ИЈЕ", rijeci: napravi(DUGO,'ije'), cls:"active"},
+{kat:"🔴 КРАТКО ЈЕ", rijeci: napravi(KRATKO,'je'), cls:"active2"},
+];
+let katAktivan=0, trenutna=null, naucene=new Set(), bod=0;
+let testPitanja=[], testIdx=0, testTacno=0, testBlok=false;
+const $=id=>document.getElementById(id);
+function sveRijeci(){ return PODACI.flatMap(k=>k.rijeci); }
+function renderKat(){
+  $('katList').innerHTML='';
+  PODACI.forEach((k,i)=>{let b=document.createElement('button'); b.textContent=k.kat+` (${k.rijeci.length})`; if(i===katAktivan)b.className=k.cls; b.onclick=()=>{katAktivan=i; renderKat(); renderLista()}; $('katList').appendChild(b)});
+}
+function renderLista(){
+  $('lista').innerHTML='';
+  PODACI[katAktivan].rijeci.forEach(r=>{
+    let d=document.createElement('div'); d.className='kartica'+(naucene.has(r.r)?' naucena':'');
+    d.innerHTML=`<span>${r.e}</span><b>${r.r}</b><br><small style="color:${r.tip==='ije'?'#2E7D32':'#C62828'};font-weight:800">${r.tip==='ije'?'ДУГО ИЈЕ':'КРАТКО ЈЕ'}</small>`;
+    d.onclick=()=>otvori(r); $('lista').appendChild(d);
+  });
+}
+function otvori(r){
+  trenutna=r; $('glavna').style.display='none'; $('ucenje').style.display='block'; $('test').style.display='none';
+  $('emojiVelika').textContent=r.e; $('upis').value=''; $('msg').textContent=''; $('daljeBtn').style.display='none'; $('trik').style.display='none';
+  $('praviloBox').innerHTML=`<b>🧠 ПРАВИЛО:</b><br>${r.prav}`;
+  $('primjer').innerHTML=`💬 Примјер: ${r.prim}`;
+  if(r.trik){$('trik').innerHTML=`💡 ${r.trik}`; $('trik').style.display='block';}
+  let s = r.r.length<=4 ? [r.r] : [r.r.slice(0,3), r.r.slice(3)];
+  $('slogovi').innerHTML=s.map((x,i)=>`<b class="${i===1?'akcenat':''}">${x}</b>`).join('');
+  $('korak').textContent='КОРАК 1: Гледај како се пише 👀';
+  $('poljePisanje').style.display='none';
+  $('velika').innerHTML='';
+  let i=0; let timer=setInterval(()=>{
+    if(i>=r.r.length){clearInterval(timer); $('korak').textContent='КОРАК 2: Сад ти напиши ✏️'; $('poljePisanje').style.display='block'; $('upis').focus(); return;}
+    let sp=document.createElement('span'); sp.textContent=r.r[i]; sp.className='trenutno'; $('velika').appendChild(sp);
+    setTimeout(()=>{sp.className='gotovo'},350); i++;
+  },380);
+}
+$('back').onclick=()=>{$('ucenje').style.display='none'; $('glavna').style.display='block'; renderLista(); updateStats()};
+function napraviTast(){
+  $('tast').innerHTML='';
+  ['И','Ј','Е','⌫'].forEach(s=>{
+    let b=document.createElement('button'); b.textContent=s; if(['И','Ј','Е'].includes(s)) b.className='hint';
+    b.onclick=()=>{if(s==='⌫')$('upis').value=$('upis').value.slice(0,-1); else $('upis').value+=s.toLowerCase(); $('upis').focus()}; $('tast').appendChild(b);
+  });
+}
+napraviTast();
+$('provjeriBtn').onclick=()=>{
+  let v=$('upis').value.trim().toLowerCase();
+  if(v===trenutna.r){
+    $('msg').innerHTML=`🎉 БРАВО! <b>${trenutna.r}</b> је тачно!`; $('msg').style.color='#2E7D32';
+    bod+=10; naucene.add(trenutna.r); $('daljeBtn').style.display='block'; updateStats(); renderLista();
+  } else {
+    let t=0; for(let i=0;i<Math.min(v.length,trenutna.r.length);i++) if(v[i]===trenutna.r[i]) t++; else break;
+    let poruka=`💡 Првих <b>${t}</b> слова је тачно. Сљедеће слово је <b>“${trenutna.r[t]||''}”</b>.`;
+    if(v.includes('е') && trenutna.r.includes('ије')) poruka+=`<br>⚠️ Овдје иде <b>ИЈЕ</b>, не само <b>Е</b>! Јер је ДУГО!`;
+    if(v.includes('ије') && trenutna.tip==='je') poruka+=`<br>⚠️ Овдје иде само <b>ЈЕ</b>, не <b>ИЈЕ</b>! Јер је КРАТКО!`;
+    $('msg').innerHTML=poruka; $('msg').style.color='#E65100';
+  }
+};
+$('upis').addEventListener('input',()=>{
+  let v=$('upis').value.toLowerCase();
+  let html=''; for(let i=0;i<trenutna.r.length;i++){ let c=trenutna.r[i]; if(i<v.length) html+=`<span style="color:${v[i]===c?'#2E7D32':'#C62828'}">${c}</span>`; else html+=`<span style="color:#ddd">${c}</span>`; }
+  $('velika').innerHTML=html;
+});
+$('daljeBtn').onclick=()=>{
+  let sve=sveRijeci(); let idx=sve.findIndex(x=>x.r===trenutna.r);
+  let sl=sve[(idx+1)%sve.length]; otvori(sl);
+};
+$('btnTest').onclick=startTest;
+$('backTest').onclick=()=>{$('test').style.display='none'; $('glavna').style.display='block';};
+$('btnUci').onclick=()=>{$('test').style.display='none'; $('ucenje').style.display='none'; $('glavna').style.display='block'; renderLista();};
+function startTest(){
+  $('glavna').style.display='none'; $('ucenje').style.display='none'; $('test').style.display='block';
+  $('diploma').style.display='none'; $('testDalje').style.display='none';
+  let ije=sveRijeci().filter(x=>x.tip==='ije').sort(()=>Math.random()-.5).slice(0,5);
+  let je=sveRijeci().filter(x=>x.tip==='je').sort(()=>Math.random()-.5).slice(0,5);
+  testPitanja=[...ije,...je].sort(()=>Math.random()-.5);
+  testIdx=0; testTacno=0; prikaziPitanje();
+}
+function prikaziPitanje(){
+  testBlok=false; $('testMsg').textContent=''; $('testDalje').style.display='none'; $('diploma').style.display='none';
+  let r=testPitanja[testIdx];
+  $('testBroj').textContent=testIdx+1; $('testBarFill').style.width=(testIdx/10*100)+'%';
+  $('emojiTest').textContent=r.e;
+  let prikaz='';
+  if(r.r.includes('ије')) prikaz=r.r.replace('ије','<span class="blank"> ___ </span>');
+  else if(r.r.includes('је')) prikaz=r.r.replace('је','<span class="blank"> ___ </span>');
+  else prikaz=r.r;
+  $('testPitanje').innerHTML=prikaz;
+  $('testOpcije').innerHTML='';
+  ['ИЈЕ','ЈЕ'].sort(()=>Math.random()-.5).forEach(opt=>{
+    let b=document.createElement('button'); b.textContent=opt; b.onclick=()=>provjeriTest(opt,b,r); $('testOpcije').appendChild(b);
+  });
+}
+function provjeriTest(opt,btn,r){
+  if(testBlok) return; testBlok=true;
+  let tacan = (r.tip==='ije' && opt==='ИЈЕ') || (r.tip==='je' && opt==='ЈЕ');
+  if(tacan){
+    testTacno++; bod+=20; $('bod').textContent=bod;
+    btn.classList.add('tacno'); $('testMsg').innerHTML=`🎉 Тачно! <b>${r.r}</b> - ${r.tip==='ije'?'ДУГО ИЈЕ':'КРАТКО ЈЕ'}`; $('testMsg').style.color='#2E7D32';
+  } else {
+    btn.classList.add('netacno');
+    [...$('testOpcije').children].forEach(x=>{ if((r.tip==='ije'&&x.textContent==='ИЈЕ')||(r.tip==='je'&&x.textContent==='ЈЕ')) x.classList.add('tacno')});
+    $('testMsg').innerHTML=`💔 Није <b>${opt}</b>. Тачно је <b>${r.r}</b> - ${r.tip==='ije'?'ДУГО ИЈЕ':'КРАТКО ЈЕ'}`; $('testMsg').style.color='#C62828';
+  }
+  $('testDalje').style.display='block';
+}
+$('testDalje').onclick=()=>{ testIdx++; if(testIdx>=10) prikaziDiplomu(); else prikaziPitanje(); };
+function prikaziDiplomu(){
+  $('testBarFill').style.width='100%'; $('testPitanje').innerHTML=''; $('testOpcije').innerHTML=''; $('emojiTest').textContent='🎓';
+  $('testMsg').textContent=''; $('testDalje').style.display='none'; $('diploma').style.display='block';
+  let ocjena = testTacno>=9 ? 'ОДЛИЧАН! 🌟🌟🌟' : testTacno>=7 ? 'ВРЛО ДОБАР! 🌟🌟' : testTacno>=5 ? 'ДОБАР! 🌟' : 'ВЈЕЖБАЈ ЈОШ МАЛО 💪';
+  $('diplomaTekst').innerHTML=`Тачно си одговорио/ла на <b>${testTacno}/10</b> питања.<br><b>${ocjena}</b>`;
+  updateStats();
+}
+$('testPonovo').onclick=startTest;
+$('nazadUci').onclick=()=>{$('test').style.display='none'; $('glavna').style.display='block'; renderLista();};
+function updateStats(){ $('bod').textContent=bod; $('nauceno').textContent=naucene.size; let uk=sveRijeci().length; let p=Math.round(naucene.size/uk*100); $('procenat').textContent=p+'%'; $('bar').style.width=p+'%'; }
+renderKat(); renderLista(); updateStats();
+</script>
+</body>
+</html>
